@@ -1,50 +1,74 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 
-const AddRecipePage = ({ navigation, route }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+const AddRecipePage = ({ navigation, addRecipe }) => {
+    const [title, setTitle] = useState('');
+    const [ingredients, setIngredients] = useState('');
+    const [instructions, setInstructions] = useState('');
 
-  const handleAddRecipe = () => {
-    if (title && description) {
-      // Call the addRecipe function from props or navigation
-      route.params.addRecipe({ id: Date.now().toString(), title, description });
-      navigation.goBack(); // Return to the RecipeListPage
-    } else {
-      alert('Please fill out all fields');
-    }
-  };
+    const handleAddRecipe = () => {
+        if (title && ingredients && instructions) {
+            const newRecipe = {
+                name: title,
+                ingredients,
+                instructions,
+            };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
-      <TextInput style={styles.input} value={title} onChangeText={setTitle} />
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={styles.input}
-        value={description}
-        onChangeText={setDescription}
-      />
-      <Button title="Add Recipe" onPress={handleAddRecipe} />
-    </View>
-  );
+            // Add the recipe and navigate back to the recipe list
+            addRecipe(newRecipe);
+            navigation.goBack();
+        }
+    };
+
+    return (
+        <ScrollView style={styles.container}>
+            <Text style={styles.header}>Add a New Recipe</Text>
+
+            <TextInput
+                placeholder="Recipe Name"
+                value={title}
+                onChangeText={setTitle}
+                style={styles.input}
+            />
+
+            <TextInput
+                placeholder="Ingredients"
+                value={ingredients}
+                onChangeText={setIngredients}
+                style={styles.input}
+                multiline
+            />
+
+            <TextInput
+                placeholder="Instructions"
+                value={instructions}
+                onChangeText={setInstructions}
+                style={styles.input}
+                multiline
+            />
+
+            <Button title="Add Recipe" onPress={handleAddRecipe} />
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    padding: 10,
-    marginBottom: 12,
-    borderRadius: 4,
-  },
+    container: {
+        flex: 1,
+        padding: 16,
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 10,
+    },
 });
 
 export default AddRecipePage;
